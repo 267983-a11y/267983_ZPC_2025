@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Viewport je nutný pre responzívny layout na mobiloch a GitHub Pages -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Moje projekty | Statická stránka</title>
+  <!-- Prepojenie na samostatný CSS súbor (relatívna cesta funguje aj na GitHub Pages) -->
+  <link rel="stylesheet" href="./styles.css" />
+  <meta name="description" content="Osobná statická stránka: O mne, 5 mini projektov a jeden hlavný projekt." />
+</head>
+<body>
+  <!-- Jednoduchá prístupná navigácia s kotvami na sekcie -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#domov">Moje Projekty</a>
+      <nav class="nav">
+        <!-- Kotvy smerujú na ID sekcií -->
+        <a href="#domov">Domov</a>
+        <a href="#o-mne">O mne</a>
+        <a href="#mini-projekty">Mini projekty</a>
+        <a href="#hlavny-projekt">Hlavný projekt</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- DOMOVSKÁ SEKCIA / HERO -->
+  <section id="domov" class="section hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <h1>Ahoj, som <span class="accent">[Tvoje meno]</span></h1>
+        <p>
+          Vitaj na mojej statickej stránke hostovanej na GitHub Pages. Nižšie nájdeš krátky profil,
+          päť mini projektov a jeden hlavný projekt. Kód je čistý, bez build nástrojov, aby na
+          GitHub Pages fungoval spoľahlivo.
+        </p>
+        <a class="btn" href="#mini-projekty">Prejsť na projekty</a>
+      </div>
+      <!-- Obrázok vpravo – nahraď vlastným súborom v assets/images -->
+      <div class="hero-media">
+        <!-- alt text je dôležitý pre prístupnosť a SEO -->
+        <img src="./assets/images/ja.jpg" alt="Portrét autora stránky" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- O MNE -->
+  <section id="o-mne" class="section">
+    <div class="container">
+      <h2>O mne</h2>
+      <p>
+        Som študent/ka a nadšenec do techniky a webu. Baví ma stavať funkčné veci a udržiavať kód
+        prehľadný. Túto stránku som vytvoril/a ako základné portfólio: jednoduché HTML + CSS, žiadny JavaScript,
+        žiadne externé knižnice – teda ideálne pre GitHub Pages.
+      </p>
+      <div class="about-grid">
+        <div class="about-item">
+          <img src="./assets/images/mini1.jpg" alt="Ilustračný záber z projektu alebo záľuby" loading="lazy" />
+          <p>Krátky popis záujmu alebo skúsenosti #1.</p>
+        </div>
+        <div class="about-item">
+          <img src="./assets/images/mini2.jpg" alt="Ilustračný záber #2" loading="lazy" />
+          <p>Krátky popis záujmu alebo skúsenosti #2.</p>
+        </div>
+        <div class="about-item">
+          <img src="./assets/images/mini3.jpg" alt="Ilustračný záber #3" loading="lazy" />
+          <p>Krátky popis záujmu alebo skúsenosti #3.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 MINI PROJEKTOV (karty v mriežke) -->
+  <section id="mini-projekty" class="section alt">
+    <div class="container">
+      <h2>Mini projekty</h2>
+      <p class="section-lead">
+        Päť krátkych ukážok – každý má obrázok, názov a pár viet. Názvy a texty si uprav podľa seba.
+      </p>
+
+      <div class="card-grid">
+        <!-- Karta 1 -->
+        <article class="card">
+          <img src="./assets/images/mini1.jpg" alt="Mini projekt 1 – náhľad" loading="lazy" />
+          <div class="card-body">
+            <h3>Mini projekt 1</h3>
+            <p>
+              Stručný popis zadania, cieľa a výsledku. Čo si sa naučil/a a čo by si zlepšil/a nabudúce.
+            </p>
+          </div>
+        </article>
+
+        <!-- Karta 2 -->
+        <article class="card">
+          <img src="./assets/images/mini2.jpg" alt="Mini projekt 2 – náhľad" loading="lazy" />
+          <div class="card-body">
+            <h3>Mini projekt 2</h3>
+            <p>
+              Kľúčová technika alebo materiál, použitý postup, krátky výsledok.
+            </p>
+          </div>
+        </article>
+
+        <!-- Karta 3 -->
+        <article class="card">
+          <img src="./assets/images/mini3.jpg" alt="Mini projekt 3 – náhľad" loading="lazy" />
+          <div class="card-body">
+            <h3>Mini projekt 3</h3>
+            <p>
+              Zameranie projektu a odkaz na prípadný repozitár alebo PDF (ak máš).
+            </p>
+          </div>
+        </article>
+
+        <!-- Karta 4 -->
+        <article class="card">
+          <img src="./assets/images/mini4.jpg" alt="Mini projekt 4 – náhľad" loading="lazy" />
+          <div class="card-body">
+            <h3>Mini projekt 4</h3>
+            <p>
+              Zhrnutie – prečo vznikol, aké boli obmedzenia, čo je hotové.
+            </p>
+          </div>
+        </article>
+
+        <!-- Karta 5 -->
+        <article class="card">
+          <img src="./assets/images/mini5.jpg" alt="Mini projekt 5 – náhľad" loading="lazy" />
+          <div class="card-body">
+            <h3>Mini projekt 5</h3>
+            <p>
+              Čo je na tomto projekte zaujímavé a na čo si hrdý/á.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- HLAVNÝ PROJEKT (väčší dôraz) -->
+  <section id="hlavny-projekt" class="section">
+    <div class="container main-project">
+      <div class="main-media">
+        <img src="./assets/images/main.jpg" alt="Hlavný projekt – náhľad" loading="lazy" />
+      </div>
+      <div class="main-text">
+        <h2>Hlavný projekt: [Názov]</h2>
+        <p>
+          Tu krátko zhrň motiváciu, ciele, postup a výsledky. Môžeš doplniť odkaz na repozitár:
+          <a href="#" target="_blank" rel="noopener">GitHub repo</a> (ak používaš, doplň URL).
+        </p>
+        <ul class="bullets">
+          <li>Cieľ: stručná formulácia.</li>
+          <li>Technológie: materiály/nástroje/softvér.</li>
+          <li>Výsledok: merateľné zlepšenie, prototyp, prezentácia…</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT / FOOTER -->
+  <footer id="kontakt" class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Kontakt</h3>
+        <p>
+          Napíš mi na: <a href="mailto:tvoje.meno@example.com">tvoje.meno@example.com</a><br />
+          Alebo ma nájdeš na GitHube: <a href="https://github.com/tvoje_meno" target="_blank" rel="noopener">github.com/tvoje_meno</a>
+        </p>
+      </div>
+      <div class="small">
+        <!-- Uvedenie licencie alebo poznámky – voliteľné -->
+        <p>© <span id="year"></span> [Tvoje meno]. Všetky práva vyhradené.</p>
+        <!-- Bez JavaScriptu pre GitHub Pages? Rok môžeš vyplniť ručne, ale malé JS je OK
+             priamo v HTML; ak JS nechceš, vymaž script nižšie a číslo doplň do HTML. -->
+        <script>
+          // Jednoduché nastavenie roka – nevyžaduje build, funguje aj na GitHub Pages
+          document.getElementById('year').textContent = new Date().getFullYear();
+        </script>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

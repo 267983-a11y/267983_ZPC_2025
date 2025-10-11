@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Moje projekty – GitHub Pages</title>
+
+  <!-- Odkaz na externý CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="wrap bar">
+      <div class="brand"><span class="dot"></span> <span>Moje projekty</span></div>
+      <nav>
+        <a href="#main" class="navlink" data-nav="main">Hlavný projekt</a>
+        <a href="#minis" class="navlink" data-nav="minis">Mini projekty</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app">
+    <!-- ==================== DOMOV ==================== -->
+    <section data-route="home" class="grid hero">
+      <div class="card">
+        <h1>Vitaj na mojej stránke projektov</h1>
+        <p class="muted">
+          Toto je jednoduchý web pre prezentáciu projektov, ktorý beží priamo na <b>GitHub Pages</b>.
+        </p>
+        <div class="gallery">
+          <div class="img"><img src="assets/hero1.jpg" alt="Ukážkový obrázok 1" /></div>
+          <div class="img"><img src="assets/hero2.jpg" alt="Ukážkový obrázok 2" /></div>
+          <div class="img"><img src="assets/hero3.jpg" alt="Ukážkový obrázok 3" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== HLAVNÝ PROJEKT ==================== -->
+    <section data-route="main" hidden>
+      <div class="card">
+        <a class="back" href="#home">← Späť na domov</a>
+        <h2>Hlavný projekt: Analýza rámu DH bicykla</h2>
+        <p>Rozsiahly popis hlavného projektu (cieľ, metóda, výsledky, atď.).</p>
+        <div class="gallery">
+          <div class="img"><img src="assets/main1.jpg" alt=""></div>
+          <div class="img"><img src="assets/main2.jpg" alt=""></div>
+          <div class="img"><img src="assets/main3.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MINI PROJEKTY ==================== -->
+    <section data-route="minis" hidden>
+      <div class="card">
+        <a class="back" href="#home">← Späť na domov</a>
+        <h2>Mini projekty – prehľad</h2>
+
+        <article class="mini-card">
+          <div class="thumb"><img src="assets/mini1.jpg" alt=""></div>
+          <div>
+            <h4>Mini projekt 1</h4>
+            <p class="muted">Krátky popis mini projektu.</p>
+            <a href="#mini-1">Otvoriť detail →</a>
+          </div>
+        </article>
+
+        <article class="mini-card">
+          <div class="thumb"><img src="assets/mini2.jpg" alt=""></div>
+          <div>
+            <h4>Mini projekt 2</h4>
+            <p class="muted">Krátky popis mini projektu.</p>
+            <a href="#mini-2">Otvoriť detail →</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==================== DETAIL MINI PROJEKTOV ==================== -->
+    <section data-route="mini-1" hidden>
+      <div class="card">
+        <a class="back" href="#minis">← Späť na mini projekty</a>
+        <h2>Mini projekt 1 – názov</h2>
+        <p>Popíš, čo si skúšal, výsledky a čo by si zlepšil nabudúce.</p>
+      </div>
+    </section>
+
+    <section data-route="mini-2" hidden>
+      <div class="card">
+        <a class="back" href="#minis">← Späť na mini projekty</a>
+        <h2>Mini projekt 2 – názov</h2>
+        <p>Stručný popis, ciele a závery.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Moje projekty – GitHub Pages demo</p>
+  </footer>
+
+  <!-- Odkaz na externý JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

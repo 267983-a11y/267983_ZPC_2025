@@ -49,7 +49,6 @@
       <h2>Rýchle info o mne</h2>
       <p>
         Študent strojariny na VUT, nadšenec do adrealínových športov a ľudových tancov.
-        Obľubujem pivo a krásne ženy.
         #punkisnotdead
       </p>
       <div class="about-grid">
@@ -69,29 +68,8 @@
     </div>
   </section>
 
-  <!-- 5 MINI PROJEKTOV (karty v mriežke) -->
-  <section id="mini-projekty" class="section alt">
-    <div class="container">
-      <h2>Mini projekty</h2>
-      <p class="section-lead">
-        Päť krátkych ukážok – každý má obrázok, názov a pár viet. Názvy a texty si uprav podľa seba.
-      </p>
-
-      <div class="card-grid">
-        <!-- Karta 1 -->
-        <article class="card">
-          <img src="./assets/images/mini1.jpg" alt="Mini projekt 1 – náhľad" loading="lazy" />
-          <div class="card-body">
-            <h3>Mini projekt 1</h3>
-            <p>
-              Stručný popis zadania, cieľa a výsledku. Čo si sa naučil/a a čo by si zlepšil/a nabudúce.
-            </p>
-          </div>
-        </article>
-  </section>
-
     <!-- SEKCIA O TVORBE STRÁNKY -->
-    <section id="tvorba-stranky" class="section alt">
+    <section id="mini-projekty" class="section">
      <div class="container">
       <h2>Tvorba stránky</h2>
       <p class="section-lead">
@@ -176,7 +154,11 @@
      <div class="container">
       <h2>Laserová rezačka</h2>
       <p class="section-lead">
-      text
+      Pomocou laserovej rezačky som vyrezal z kartónu všetky potrebné diely pre model meča. Najskôr som si v CAD programe vytvoril presný 3D model, 
+      z ktorého som následne vygeneroval ploché výkresy a exportoval ich do formátu DXF. Tento formát je ideálny pre laserové zariadenia, 
+      pretože obsahuje presné vektorové krivky, ktoré rezačka dokáže bezchybne sledovať. Po vyrezaní dielov som musel celý meč poskladať ručne, 
+      pričom zadanie neumožňovalo použiť žiadne lepidlo ani iné spojovacie materiály. Všetky spoje preto museli byť navrhnuté tak, aby do seba presne zapadli. 
+      Vďaka presnému modelovaniu a čistým rezom z laseru vznikol pevný a detailný kartónový meč len pomocou mechanického zasúvania jednotlivých častí.
       </p>
 
             <div class="card-grid">
@@ -186,7 +168,7 @@
           <div class="card-body">
             <h3>CAD</h3>
             <p>
-              Modelovanie meča v CAD softvéri.
+              Modelovanie komponentov v CAD softvéri.
             </p>
           </div>
         </article>
@@ -215,6 +197,17 @@
                 
         <!-- Meč -->
         <article class="card">
+          <img src="./assets/images/laser_skladanie_mec.jpg" alt="Logo" loading="lazy" />
+          <div class="card-body">
+            <h3>Montáž</h3>
+            <p>
+              Skladanie komponentov.
+            </p>
+          </div>
+        </article>
+
+        <!-- Meč -->
+        <article class="card">
           <img src="./assets/images/laser_mec.jpg" alt="Logo" loading="lazy" />
           <div class="card-body">
             <h3>Meč</h3>
@@ -224,6 +217,56 @@
           </div>
         </article>
   </section>
+
+<!-- SEKCIA O 3D TLACI -->
+    <section id="3dtlac" class="section alt">
+     <div class="container">
+      <h2>3D tlač</h2>
+      <p class="section-lead">
+      Tu máš spojenie oboch textov do jedného prirodzeného, ľudského a dobre plynúceho opisu:---Vyrobil som funkčný model ženevského mechanizmu pomocou 3D tlače. 
+      Mechanizmus sa skladá zo štyroch dielov – podložky, dvoch voľne uložených koliesok a kolíka osadeného na presach. 
+      Všetky časti som navrhol v CAD softvéri, kde som riešil presné rozmery, vôľe a to, 
+      aby sa po vytlačení dali jednoducho zložiť a pohybovali sa plynulo. Hotové modely som exportoval vo formáte STL a vložil do PrusaSlicera, 
+      ktorý mi vytvoril G-code pre 3D tlačiareň. Tlač prebehla na tlačiarni Prusa, ktorá vytvorila pevné a presné plastové diely s celkovou hmotnosťou pod 100 g. 
+      Po vytlačení som všetky komponenty očistil, skontroloval a poskladal dokopy. 
+      Celý model zretelne ukazuje princíp činnosti ženevského mechanizmu.
+    </p>
+
+            <div class="card-grid">
+        <!-- Model -->
+        <article class="card">
+          <img src="./assets/images/3dtlac_model.png" alt="Inetrface" loading="lazy" />
+          <div class="card-body">
+            <h3>CAD model</h3>
+            <p>
+              Ženevský mechanizmus v CAD softvéri.
+            </p>
+          </div>
+        </article>
+
+        <!-- Uloženie s presahom -->
+        <article class="card">
+          <img src="./assets/images/3dtlac_presah.jpg" alt="Rezací stroj" loading="lazy" />
+          <div class="card-body">
+            <h3>Uloženie</h3>
+            <p>
+              Uloženie častí s presahom pre lepšie spojenie.
+            </p>
+          </div>
+        </article>
+                
+        <!-- Zostava -->
+        <article class="card">
+          <img src="./assets/images/3dtlac_zostava.jpg" alt="Logo" loading="lazy" />
+          <div class="card-body">
+            <h3>Zostava</h3>
+            <p>
+              Zložený mechanizmus z tlačených častí.
+            </p>
+          </div>
+        </article>
+  </section>
+
 
 
 

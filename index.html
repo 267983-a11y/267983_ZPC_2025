@@ -265,6 +265,16 @@
             </p>
           </div>
         </article>
+        </div>
+
+<div style="width:100%; text-align:center; margin:40px 0;" class="main-media">
+  <video controls muted preload="metadata"
+         style="display:block; margin:0 auto; width:90vw; max-width:800px; height:auto;">
+    <source src="./assets/videos/zenevsky_mechanizmus.mov" type="video/mp4">
+  </video>
+</div>
+
+
   </section>
 
 
@@ -354,7 +364,7 @@
     <section id="3dtlac" class="section alt">
      <div class="container">
       <h2>Arduino</h2>
-      <p class="section-lead">
+      <p>
 Pri tomto projekte som za pomoci Arduina vytvoril jednoduchú svetelnú animáciu, ktorá postupne rozsväcuje LED diódy v rôznych farbách. 
 Cieľom bolo naučiť sa pracovať so základným zapojením na breadboarde, pochopiť princíp digitálnych výstupov a vytvoriť vlastnú animáciu riadenú programom.
 Najskôr som si pripravil breadboard, tri LED diódy a zodpovedajúce rezistory, aby som predišiel ich poškodeniu. 
@@ -394,22 +404,662 @@ V programe som si definoval premennú animationSpeed, ktorá umožňuje meniť r
   <section id="hlavny-projekt" class="section">
     <div class="container main-project">
       <div class="main-media">
-        <img src="./assets/images/main.jpg" alt="Hlavný projekt – náhľad" loading="lazy" />
+        <img src="./assets/images/mtb_telemtria_brzda_R.jpg" alt="Hlavný projekt – MTB brzdová telemetria" loading="lazy" />
       </div>
       <div class="main-text">
-        <h2>Hlavný projekt: [Názov]</h2>
+        <h2>MTB brzdová telemetria</h2>
         <p>
-          Tu krátko zhrň motiváciu, ciele, postup a výsledky. Môžeš doplniť odkaz na repozitár:
-          <a href="#" target="_blank" rel="noopener">GitHub repo</a> (ak používaš, doplň URL).
+          Cieľom môjho hlavného projektu je vytvoriť systém na monitorovanie a analýzu brzdového systému horského bicykla v reálnom čase.
         </p>
         <ul class="bullets">
-          <li>Cieľ: stručná formulácia.</li>
-          <li>Technológie: materiály/nástroje/softvér.</li>
-          <li>Výsledok: merateľné zlepšenie, prototyp, prezentácia…</li>
+          <li><b>Cieľ:</b> Vytvoriť systém na monitorovanie a analýzu brzdového systému horského bicykla v reálnom čase a následné ukladanie údajov o jednotlivých brzdách a jazdách</li>
+          <li><b>Technológie:</b> Arduino mikrokontrolér s WiFi modulom, senzory a zapisovačka SD karty. </li>
+          <li><b>Výsledok:</b> Funkčný systému MTB telemetrie.</li>
         </ul>
       </div>
     </div>
   </section>
+
+
+
+
+  <!-- HLAVNÝ PROJEKT PTINCÍP FUNGOVANIA -->
+  <section id="hlavny-projekt" class="section">
+    <div class="container">
+        <h2>Princíp fungovania</h2>
+        <p>
+         V rámci projektu bol navrhnutý a realizovaný merací systém založený na platforme Arduino UNO R4 WiFi, 
+         ktorý zabezpečuje zber digitálnych signálov z Hallových senzorov, ich časovo synchronizované ukladanie na SD kartu 
+         a súčasné sprístupnenie dát prostredníctvom webového rozhrania cez WiFi. 
+         Jednotlivé hardvérové komponenty spolu komunikujú prostredníctvom digitálnych vstupov, SPI zbernice a bezdrôtovej sieťovej komunikácie. 
+         Systém umožňuje sledovanie nameraných hodnôt v reálnom čase aj spätnú analýzu historických meraní.
+        </p>
+        <ul class="bullets">
+          <li><b>Hallove senzory:</b> senzory sú pripojené na digitálne vstupy mikrokontroléra a pracujú v spínacom režime. Pri priblížení magnetu zmenia logickú úroveň výstupu, ktorú Arduino vyhodnocuje ako binárnu hodnotu. Komunikácia je jednosmerná – senzory poskytujú informáciu o stave, bez spätnej väzby.</li>
+          <li><b>Arduino UNO R4 WiFi:</b> Arduino plní úlohu centrálnej riadiacej jednotky systému. Periodicky číta stav Hallových senzorov, spracúva ich na logické hodnoty, zabezpečuje časovanie vzorkovania a riadi komunikáciu so SD kartou aj WiFi modulom. Všetky hardvérové časti systému sú synchronizované prostredníctvom interného časovača mikrokontroléra. </li>
+          <li><b>SD karta:</b> ukladanie dát: SD karta je pripojená k Arduinu prostredníctvom SPI zbernice. Slúži na nevolatilné ukladanie nameraných dát do textových súborov, rozdelených podľa jednotlivých meraní (session). Arduino zapisuje hodnoty senzorov v pevnom časovom intervale, čím vzniká časový záznam signálov vhodný na ďalšiu analýzu.</li>
+          <li><b>WiFi modul:</b> prístup k dátam: Integrovaný WiFi modul umožňuje Arduinu fungovať ako samostatný prístupový bod. Klientské zariadenia sa môžu pripojiť cez webový prehliadač a získavať aktuálne hodnoty senzorov alebo historické dáta uložené na SD karte. Prenos dát prebieha prostredníctvom HTTP požiadaviek.</li>
+          <li><b>Webové rozhranie:</b> Webové rozhranie je generované priamo mikrokontrolérom a zobrazované v prehliadači klienta. Zobrazuje živé priebehy signálov Hallových senzorov a umožňuje výber a vizualizáciu predchádzajúcich meraní. Komunikácia medzi webovou stránkou a Arduinom prebieha pomocou jednoduchých textových odpovedí.</li>
+        </ul>
+    </div>
+  </section>
+
+
+
+<!-- ===================================================== -->
+<!-- PRINCÍP FUNKCIE MERACIEHO A LOGOVACIEHO SYSTÉMU -->
+<section id="princip-funkcie-systemu" class="section">
+  <div class="container">
+
+    <h2>Princíp fungovania meracieho a logovacieho systému</h2>
+
+    <p>
+      Program implementuje autonómny merací a dátovo-logovací systém
+      založený na platforme Arduino UNO R4 WiFi. Systém periodicky sníma
+      digitálne signály z dvoch Hallových senzorov, ukladá ich v pevnom
+      časovom intervale na SD kartu a zároveň sprístupňuje namerané dáta
+      prostredníctvom vstavaného webového servera. Jednotlivé softvérové
+      bloky sú navrhnuté tak, aby zabezpečovali neblokujúci chod systému
+      a paralelnú činnosť merania aj sieťovej komunikácie.
+    </p>
+
+    <!-- KNIŽNICE -->
+    <h3>Použité knižnice a ich funkcia</h3>
+<pre><code>
+#include &lt;SPI.h&gt;
+#include &lt;SD.h&gt;
+#include &lt;WiFiS3.h&gt;
+</code></pre>
+    <p>
+      Knižnica <code>SPI</code> zabezpečuje hardvérovú komunikáciu
+      medzi mikrokontrolérom a SD kartou. Knižnica <code>SD</code>
+      implementuje súborový systém FAT a umožňuje vytváranie priečinkov
+      a súborov. Knižnica <code>WiFiS3</code> riadi bezdrôtový modul
+      a umožňuje prevádzku HTTP servera.
+    </p>
+
+    <!-- HARDVÉR -->
+    <h3>Definícia vstupov a hardvérových rozhraní</h3>
+<pre><code>
+const int hallSensorFrontLeft = 2;
+const int hallSensorBackRight = 3;
+const int chipSelect = 10;
+</code></pre>
+    <p>
+      Hallove senzory sú pripojené na digitálne vstupy mikrokontroléra
+      a sú konfigurované s interným pull-up rezistorom. Výstup senzora
+      je aktívny v logickej úrovni LOW, čo je zohľadnené pri čítaní vstupu.
+      SD karta je pripojená prostredníctvom SPI zbernice, kde pin
+      <code>chipSelect</code> slúži na výber periférie.
+    </p>
+
+    <!-- WIFI -->
+    <h3>Konfigurácia WiFi prístupového bodu a servera</h3>
+<pre><code>
+char ssid[] = "UNO_R4_HALL";
+char pass[] = "12345678";
+WiFiServer server(80);
+</code></pre>
+    <p>
+      Arduino pracuje v režime WiFi Access Point, čím vytvára vlastnú
+      bezdrôtovú sieť. Webový server beží na štandardnom HTTP porte 80
+      a slúži na spracovanie požiadaviek z webového prehliadača klienta.
+    </p>
+
+    <!-- DÁTA -->
+    <h3>Premenné pre ukladanie nameraných údajov</h3>
+<pre><code>
+int lfb = 0;
+int rbb = 0;
+</code></pre>
+    <p>
+      Premenné uchovávajú aktuálny stav Hallových senzorov, pričom hodnota
+      <code>1</code> reprezentuje detekciu magnetického poľa a hodnota
+      <code>0</code> jeho absenciu.
+    </p>
+
+    <!-- SESSION LOGIKA -->
+    <h3>Vyhľadanie nasledujúceho meracieho behu</h3>
+<pre><code>
+int findNextSessionNumber() {
+  int maxSession = -1;
+  File dir = SD.open("/OUT");
+
+  while (true) {
+    File e = dir.openNextFile();
+    if (!e) break;
+
+    if (e.isDirectory() && e.name()[0] == 'R') {
+      int n = atoi(e.name() + 1);
+      if (n > maxSession) maxSession = n;
+    }
+    e.close();
+  }
+  return maxSession + 1;
+}
+</code></pre>
+    <p>
+      Funkcia prehľadáva adresár <code>/OUT</code> a analyzuje názvy
+      podpriečinkov typu <code>Rxxx</code>. Na základe najvyššieho
+      nájdeného čísla určí nové číslo session, čím zabezpečí jednoznačnosť
+      každého meracieho behu.
+    </p>
+
+    <!-- SETUP -->
+    <h3>Inicializácia systému</h3>
+<pre><code>
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(hallSensorFrontLeft, INPUT_PULLUP);
+  pinMode(hallSensorBackRight, INPUT_PULLUP);
+
+  SD.begin(chipSelect);
+  SD.mkdir("/OUT");
+
+  int s = findNextSessionNumber();
+  sprintf(sessionName, "R%03d", s);
+  sprintf(sessionFolder, "/OUT/%s", sessionName);
+  SD.mkdir(sessionFolder);
+
+  WiFi.beginAP(ssid, pass);
+  server.begin();
+}
+</code></pre>
+    <p>
+      Po spustení systému sú inicializované digitálne vstupy, SD karta,
+      adresárová štruktúra pre aktuálne meranie a WiFi prístupový bod.
+      Server je následne pripravený prijímať HTTP požiadavky klientov.
+    </p>
+
+    <!-- LOGGING -->
+    <h3>Periodický zber dát a zápis na SD kartu</h3>
+<pre><code>
+if (now - lastSample >= sampleInterval) {
+  lastSample = now;
+
+  lfb = digitalRead(hallSensorFrontLeft) == LOW;
+  rbb = digitalRead(hallSensorBackRight) == LOW;
+
+  leftFile = SD.open("/OUT/.../LFB.TXT", FILE_WRITE);
+  leftFile.println(lfb);
+  leftFile.close();
+
+  rightFile = SD.open("/OUT/.../RBB.TXT", FILE_WRITE);
+  rightFile.println(rbb);
+  rightFile.close();
+}
+</code></pre>
+    <p>
+      V pevnom časovom intervale systém načíta stav oboch Hallových senzorov
+      a zapíše ich hodnoty do textových súborov. Každý riadok predstavuje
+      jednu vzorku, čím vzniká časový záznam signálu.
+    </p>
+
+    <!-- HTTP ENDPOINTY -->
+    <h3>Obsluha HTTP požiadaviek</h3>
+<pre><code>
+if (req.indexOf("GET /live") >= 0) { ... }
+if (req.indexOf("GET /runs") >= 0) { ... }
+if (req.indexOf("GET /run?name=") >= 0) { ... }
+</code></pre>
+    <p>
+      Server rozlišuje jednotlivé HTTP endpointy. Požiadavka
+      <code>/live</code> poskytuje aktuálne hodnoty senzorov v reálnom čase,
+      <code>/runs</code> vracia zoznam uložených meraní a
+      <code>/run?name=</code> umožňuje načítanie historických dát konkrétneho behu.
+    </p>
+
+    <!-- WEB -->
+    <h3>Generovanie webového rozhrania</h3>
+<pre><code>
+client.println("Content-Type: text/html");
+client.println(R"rawliteral(
+<!DOCTYPE html>
+<html>
+...
+</html>
+)rawliteral");
+</code></pre>
+    <p>
+      HTML stránka je generovaná priamo mikrokontrolérom a odosielaná
+      klientovi ako odpoveď HTTP servera. JavaScript v prehliadači
+      zabezpečuje periodické načítavanie dát a ich grafické zobrazenie
+      pomocou HTML5 canvas.
+    </p>
+
+  </div>
+</section>
+
+
+
+
+
+<!-- ===================================================== -->
+<!-- SPRACOVANIE DÁT Z TELEMETRIE V PROSTREDÍ MATLAB -->
+<section id="spracovanie-dat-matlab" class="section">
+  <div class="container">
+
+    <h2>Spracovanie nameraných dát zo SD karty v prostredí MATLAB</h2>
+
+    <p>
+      Táto časť projektu sa zameriava na offline spracovanie nameraných dát
+      v prostredí MATLAB. Dáta sú uložené na SD karte, ktorá je po ukončení
+      merania fyzicky vybratá z telemetrického zariadenia a vložená do počítača.
+      MATLAB skript následne automaticky načítava uložené súbory, triedi
+      jednotlivé meracie behy a vizualizuje časové priebehy signálov
+      Hallových senzorov.
+    </p>
+
+    <!-- CESTA A ČASOVANIE -->
+    <h3>Nastavenie dátového zdroja a vzorkovacieho intervalu</h3>
+<pre><code>
+baseFolder = 'D:\OUT';
+
+Ts = 0.1;   % vzorkovací interval [s] (100 ms z Arduina)
+</code></pre>
+    <p>
+      Premenná <code>baseFolder</code> určuje koreňový adresár,
+      do ktorého je pripojená SD karta a kde sú uložené všetky meracie dáta.
+      Vzorkovací interval <code>Ts</code> je zhodný s intervalom použitým
+      v mikrokontroléri Arduino, čím je zabezpečená časová konzistentnosť
+      medzi meraním a jeho následným spracovaním.
+    </p>
+
+    <!-- VYHĽADANIE SESSION -->
+    <h3>Automatické vyhľadanie meracích behov</h3>
+<pre><code>
+dirs = dir(fullfile(baseFolder, 'R*'));
+dirs = dirs([dirs.isdir]);
+
+isSession = arrayfun(@(d) ...
+    ~isempty(regexp(d.name, '^R\d{3}$', 'once')), dirs);
+dirs = dirs(isSession);
+</code></pre>
+    <p>
+      Skript prehľadáva koreňový adresár SD karty a vyhľadáva podpriečinky
+      s názvami vo formáte <code>Rxxx</code>, ktoré reprezentujú jednotlivé
+      meracie behy. Regulárny výraz zabezpečuje, že sú spracované výhradne
+      korektné adresáre vytvorené telemetrickým systémom.
+    </p>
+
+    <!-- TRIEDENIE -->
+    <h3>Zoradenie behov podľa ich identifikátora</h3>
+<pre><code>
+sessionNums = arrayfun(@(d) str2double(d.name(2:end)), dirs);
+[~, idx] = sort(sessionNums);
+dirs = dirs(idx);
+</code></pre>
+    <p>
+      Identifikátor meracieho behu je získaný z názvu adresára.
+      Behom je následne priradené číselné označenie, podľa ktorého sú
+      všetky merania zoradené chronologicky, čo umožňuje ich systematické
+      spracovanie a prehľadnú analýzu.
+    </p>
+
+    <!-- HLAVNÝ CYKLUS -->
+    <h3>Postupné spracovanie jednotlivých meraní</h3>
+<pre><code>
+for i = 1:length(dirs)
+
+    sessionName = dirs(i).name;
+    sessionPath = fullfile(baseFolder, sessionName);
+</code></pre>
+    <p>
+      Hlavná slučka skriptu zabezpečuje postupné spracovanie všetkých
+      nájdených meracích behov. Každý beh je spracovaný nezávisle,
+      čo umožňuje identifikovať prípadné chyby alebo nekompletné dáta
+      bez ovplyvnenia ostatných meraní.
+    </p>
+
+    <!-- NAČÍTANIE SÚBOROV -->
+    <h3>Načítanie dát zo súborov LFB a RBB</h3>
+<pre><code>
+lfbFile = fullfile(sessionPath, 'LFB.TXT');
+rbbFile = fullfile(sessionPath, 'RBB.TXT');
+
+if ~isfile(lfbFile) || ~isfile(rbbFile)
+    warning('Preskakujem %s – chýba súbor', sessionName);
+    continue
+end
+
+lfb = load(lfbFile);
+rbb = load(rbbFile);
+</code></pre>
+    <p>
+      Pre každý merací beh sú načítané textové súbory obsahujúce binárne
+      hodnoty Hallových senzorov. V prípade chýbajúcich dát je daný beh
+      automaticky preskočený, čím sa zvyšuje robustnosť spracovania.
+    </p>
+
+    <!-- ČASOVÁ OS -->
+    <h3>Synchronizácia dát a tvorba časovej osi</h3>
+<pre><code>
+N = min(length(lfb), length(rbb));
+t = (0:N-1) * Ts;
+
+lfb = lfb(1:N);
+rbb = rbb(1:N);
+</code></pre>
+    <p>
+      Dĺžky signálov z oboch senzorov sú zosúladené na rovnaký počet vzoriek.
+      Na základe vzorkovacieho intervalu je následne vytvorená časová os,
+      ktorá umožňuje jednoznačné časové priradenie každej nameranej hodnoty.
+    </p>
+
+    <!-- GRAF -->
+    <h3>Vizualizácia nameraných signálov</h3>
+<pre><code>
+figure('Name', sessionName, 'NumberTitle', 'off');
+
+subplot(2,1,1)
+stairs(t, lfb, 'LineWidth', 1.5)
+
+subplot(2,1,2)
+stairs(t, rbb, 'LineWidth', 1.5)
+</code></pre>
+    <p>
+      Pre každý merací beh je vytvorené samostatné grafické okno.
+      Signály sú zobrazené pomocou schodového priebehu, ktorý
+      zodpovedá diskrétnemu charakteru digitálneho merania.
+      Obe osi sú prepojené, čo umožňuje synchronizované
+      porovnávanie signálov v čase.
+    </p>
+
+    <!-- ZÁVER -->
+    <h3>Zhrnutie spracovania dát</h3>
+    <p>
+      MATLAB skript zabezpečuje automatizované spracovanie dát získaných
+      z telemetrického systému. Vďaka jednotnej adresárovej štruktúre
+      a pevne definovanému vzorkovaciemu intervalu je možné dáta
+      efektívne analyzovať, vizualizovať a porovnávať jednotlivé
+      meracie behy v offline prostredí.
+    </p>
+
+        <!-- UKÁŽKA VÝSTUPU GRAFOV -->
+    <h3>Ukážka výstupu spracovania dát v prostredí MATLAB</h3>
+    <p>
+      Nasledujúci obrázok znázorňuje typický výstup MATLAB skriptu
+      pre spracovanie dát z telemetrického systému. Zobrazené sú
+      časové priebehy signálov Hallových senzorov LFB a RBB
+      pre vybraný merací beh, vykreslené na spoločnej časovej osi.
+    </p>
+  
+    <div class="main-media">
+      <img src="./assets/images/matlab_graf.png"
+          alt="Ukážka výstupu MATLAB grafov – LFB a RBB signály"
+          style="display:block; margin: auto; max-width:40%;">
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<!-- ===================================================== -->
+<!-- OPIS SCHÉMY ZAPOJENIA TELEMETRICKÉHO SYSTÉMU -->
+<section id="opis-schemy-zapojenia" class="section">
+  <div class="container">
+
+    <h2>Schéma zapojenia meracieho a telemetrického systému</h2>
+
+    <!-- LAYOUT: OBRÁZOK VĽAVO, TEXT VPRAVO -->
+    <div class="schema-layout">
+
+      <!-- OBRÁZOK -->
+      <div class="schema-image main-media">
+        <img src="./assets/images/mtb_telemetria_schema.jpg"
+             alt="Schéma zapojenia telemetrického meracieho systému">
+      </div>
+
+      <!-- TEXT -->
+      <div class="schema-text">
+        <p>
+          Zobrazená schéma predstavuje hardvérové zapojenie telemetrického
+          meracieho systému, ktoré priamo zodpovedá použitému softvéru.
+          Systém pozostáva z mikrokontroléra Arduino UNO R4 WiFi,
+          dvoch Hallových senzorov (HL2 a HL3) a pamäťovej SD karty.
+          Zapojenie umožňuje spoľahlivý zber digitálnych signálov,
+          ich ukladanie na SD kartu a následné spracovanie nameraných dát.
+        </p>
+
+        <h3>Mikrokontrolér Arduino UNO R4 WiFi</h3>
+        <p>
+          Arduino slúži ako centrálna riadiaca jednotka systému.
+          Digitálne vstupy D2 a D3 sú použité na čítanie výstupov
+          Hallových senzorov, čo korešponduje s definíciou vstupných
+          pinov v programovom kóde. Napájacie piny 5 V a GND
+          zabezpečujú spoločné napájanie všetkých pripojených prvkov.
+        </p>
+
+        <h3>Hallove senzory HL2 a HL3</h3>
+        <p>
+          Hallove senzory sú pripojené tromi vodičmi – napájanie (5 V),
+          zem (GND) a signál. Signálové výstupy sú vedené priamo
+          na digitálne vstupy Arduina. Senzory pracujú v spínacom režime,
+          pričom zmena magnetického poľa sa prejaví zmenou logickej úrovne
+          signálu.
+        </p>
+
+        <h3>Rozvod napájania</h3>
+        <p>
+          Napájanie 5 V a GND je z Arduina rozvedené pomocou spoločného
+          rozbočovacieho bodu k obom Hallovým senzorom.
+          Takéto riešenie zabezpečuje jednotnú referenčnú zem
+          a stabilné napájanie všetkých snímacích prvkov.
+        </p>
+
+        <h3>SD karta a SPI zbernica</h3>
+        <p>
+          SD karta je pripojená k Arduinu prostredníctvom SPI zbernice.
+          V schéme sú vyznačené signály MOSI (D11), MISO (D12),
+          SCK (D13) a CS (D10). Toto zapojenie priamo zodpovedá
+          softvérovej konfigurácii systému, kde je pin D10 použitý
+          ako výberový signál pre SD kartu.
+        </p>
+
+        <h3>Funkčný význam zapojenia</h3>
+        <p>
+          Navrhnutá schéma zapojenia zabezpečuje synchronizovaný zber dát
+          z Hallových senzorov, ich archiváciu na SD karte a ďalšie
+          spracovanie v online aj offline režime. Zapojenie je prehľadné
+          a modulárne, čo umožňuje jednoduchú údržbu, diagnostiku
+          a prípadné rozšírenie systému.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ===================================================== -->
+<!-- 3D MODELY MECHANICKEJ KONŠTRUKCIE TELEMETRIE -->
+<section id="mechanicka-konstrukcia-modely" class="section">
+  <div class="container">
+
+    <h2>3D modely mechanickej konštrukcie telemetrického systému</h2>
+
+    <p>
+      Nasledujúca časť prezentuje jednotlivé 3D modely mechanických dielov
+      telemetrického systému. Modely boli navrhnuté s cieľom zabezpečiť
+      ochranu elektroniky, stabilné uchytenie Hallových senzorov a
+      jednoduchú montáž celého zariadenia. Každý diel plní presne
+      definovanú mechanickú a funkčnú úlohu v rámci celku.
+    </p>
+
+    <!-- 1. HLAVNÝ BOX -->
+    <h3>1. Hlavný box pre uloženie elektroniky</h3>
+    <p>
+      Hlavný box slúži ako ochranný kryt pre riadiacu elektroniku,
+      mikrokontrolér a SD modul. Konštrukcia zabezpečuje mechanickú ochranu
+      pred poškodením, čiastočnú ochranu proti nečistotám a umožňuje
+      vedenie káblov k senzorom a napájaniu.
+    </p>
+    <div style="width:100%; height:500px; display:flex; justify-content:center;">
+      <iframe src="https://a360.co/3NscRfW"
+              width="50%" height="100%" frameborder="0" allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- 2. BOX PRE HALLOV SENZOR -->
+    <h3>2. Box pre Hallov senzor</h3>
+    <p>
+      Tento diel je určený na presné a stabilné uchytenie Hallovho senzora.
+      Zabezpečuje jeho správnu polohu voči snímanému magnetickému poľu
+      a zároveň chráni senzor pred mechanickým poškodením počas prevádzky.
+    </p>
+    <div style="width:100%; height:500px; display:flex; justify-content:center;">
+      <iframe src="https://a360.co/3LpzWPP"
+              width="50%" height="100%" frameborder="0" allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- 3. VRCHNÁK BOXU PRE HALLOV SENZOR -->
+    <h3>3. Vrchnák pre box Hallovho senzora</h3>
+    <p>
+      Vrchnák slúži na uzatvorenie boxu Hallovho senzora.
+      Zaisťuje fixáciu senzora v požadovanej polohe a chráni
+      ho pred vonkajšími vplyvmi, ako sú prach a vlhkosť.
+    </p>
+    <div style="width:100%; height:500px; display:flex; justify-content:center;">
+      <iframe src="https://a360.co/3LVNS43"
+              width="50%" height="100%" frameborder="0" allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- 4. UZÁVER HLAVNÉHO BOXU -->
+    <h3>4. Uzáver hlavného boxu</h3>
+    <p>
+      Uzáver hlavného boxu zabezpečuje uzatvorenie elektronickej časti
+      zariadenia. Konštrukcia umožňuje opakovanú demontáž pre servisné
+      zásahy, pričom zachováva dostatočnú pevnosť a stabilitu spojenia.
+    </p>
+    <div style="width:100%; height:500px; display:flex; justify-content:center;">
+      <iframe src="https://a360.co/3NsVTxT"
+              width="50%" height="100%" frameborder="0" allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- 5. PODLOŽKA HLAVNÉHO BOXU -->
+    <h3>5. Podložka hlavného boxu</h3>
+    <p>
+      Podložka slúži ako montážny a stabilizačný prvok hlavného boxu.
+      Umožňuje pevné uchytenie telemetrického systému ku konštrukcii rámu
+      alebo inému nosnému prvku a zároveň znižuje prenos vibrácií
+      na elektronické komponenty.
+    </p>
+    <div style="width:100%; height:500px; display:flex; justify-content:center;">
+      <iframe src="https://a360.co/4sV8f2c"
+              width="50%" height="100%" frameborder="0" allowfullscreen>
+      </iframe>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- POUŽÍVATEĽSKÉ ROZHRANIE WEBOVEJ APLIKÁCIE -->
+<section id="uzivatelske-rozhranie" class="section">
+  <div class="container">
+
+    <h2>Používateľské rozhranie webovej aplikácie</h2>
+
+    <!-- LAYOUT: OBRÁZOK VĽAVO, TEXT VPRAVO -->
+    <div class="ui-layout">
+
+      <!-- OBRÁZOK ROZHRANIA -->
+      <div class="ui-image main-media">
+        <img src="./assets/images/mtb_telemetria_ui.jpeg"
+             alt="Používateľské rozhranie webovej aplikácie telemetrického systému">
+      </div>
+
+      <!-- POPIS ROZHRANIA -->
+      <div class="ui-text">
+        <p>
+          Používateľské rozhranie je realizované ako jednoduchá webová aplikácia,
+          ktorá je generovaná priamo mikrokontrolérom Arduino a zobrazovaná
+          v štandardnom webovom prehliadači. Rozhranie umožňuje sledovanie
+          stavov Hallových senzorov v reálnom čase, ako aj spätnú analýzu
+          historických meraní uložených na SD karte.
+        </p>
+
+        <h3>Režim LIVE – aktívne meranie</h3>
+        <p>
+          Horná časť rozhrania zobrazuje aktuálne prebiehajúce meranie.
+          Signály zo senzorov LFB a RBB sú vizualizované vo forme
+          schodových priebehov, ktoré zodpovedajú diskrétnemu charakteru
+          digitálneho snímania. Grafy sú priebežne aktualizované
+          v pevnom časovom intervale, čo umožňuje okamžitú kontrolu
+          funkčnosti systému počas prevádzky.
+        </p>
+
+        <h3>Režim HISTORY – historické merania</h3>
+        <p>
+          Spodná časť rozhrania slúži na zobrazenie historických meraní.
+          Používateľ si môže z rozbaľovacieho zoznamu zvoliť konkrétny
+          merací beh označený identifikátorom <code>Rxxx</code>.
+          Po výbere sú zobrazené priebehy oboch senzorov
+          synchronizované na spoločnej časovej osi.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ===================================================== -->
+<!-- VÝSLEDNÝ PRODUKT – INŠTALÁCIA NA BICYKLI -->
+<section id="vysledny-produkt" class="section">
+  <div class="container">
+
+    <h2>Inštalácia na bicykli</h2>
+    <p class="section-intro">
+      Nasledujúca prezentácia dokumentuje finálnu podobu telemetrického systému
+      po jeho mechanickej montáži na bicykel. Zobrazené sú jednotlivé
+      krabičky elektroniky a senzorov v reálnej prevádzke.
+    </p>
+
+    <div class="slideshow">
+
+      <!-- SLIDES -->
+      <div class="slide active main-media">
+        <img src="./assets/images/mtb_telemetria_sustava.jpg">
+      </div>
+      <div class="slide main-media">
+        <img src="./assets/images/mtb_telemetria_main_box.jpg">
+      </div>
+      <div class="slide main-media">
+        <img src="./assets/images/mtb_telemtria_brzda_R.jpg">
+      </div>
+      <div class="slide main-media">
+        <img src="./assets/images/mtb_telemtria_brzda_l_off.jpg">
+      </div>
+      <div class="slide main-media ">
+        <img src="./assets/images/mtb_telemtria_brzda_l_on.jpg">
+      </div>
+
+      <!-- CONTROLS -->
+      <button class="navv prev" onclick="changeSlide(-1)">&#10094;</button>
+      <button class="navv next" onclick="changeSlide(1)">&#10095;</button>
+
+      <!-- DOTS -->
+      <div class="dots">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+        <span class="dot" onclick="goToSlide(3)"></span>
+        <span class="dot" onclick="goToSlide(4)"></span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
   <!-- KONTAKT / FOOTER -->
   <footer id="kontakt" class="site-footer">
@@ -433,5 +1083,34 @@ V programe som si definoval premennú animationSpeed, ktorá umožňuje meniť r
       </div>
     </div>
   </footer>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
+
+function showSlide(n) {
+  slides.forEach(s => s.classList.remove("active"));
+  dots.forEach(d => d.classList.remove("active"));
+
+  slides[n].classList.add("active");
+  dots[n].classList.add("active");
+  currentSlide = n;
+}
+
+function changeSlide(step) {
+  let n = currentSlide + step;
+  if (n >= slides.length) n = 0;
+  if (n < 0) n = slides.length - 1;
+  showSlide(n);
+}
+
+function goToSlide(n) {
+  showSlide(n);
+}
+</script>
+
+
+
 </body>
 </html>
